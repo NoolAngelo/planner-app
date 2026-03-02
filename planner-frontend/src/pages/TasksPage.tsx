@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import {
   DndContext,
   DragOverlay,
@@ -6,16 +6,16 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useTasks, useBulkUpdateTasks } from "../hooks/useTasks";
-import { useProjects } from "../hooks/useProjects";
+import { useMemo, useState } from "react";
 import TaskForm from "../components/tasks/TaskForm";
 import TaskItem from "../components/tasks/TaskItem";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { useProjects } from "../hooks/useProjects";
+import { useTasks } from "../hooks/useTasks";
 import type { Task } from "../types";
 
 type FilterStatus = "all" | "todo" | "in_progress" | "completed";
@@ -40,14 +40,13 @@ export default function TasksPage() {
   });
 
   const { data: projects = [] } = useProjects();
-  const bulkUpdateMutation = useBulkUpdateTasks();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
-    })
+    }),
   );
 
   const tasks = tasksData?.tasks || [];
@@ -89,7 +88,7 @@ export default function TasksPage() {
         (t) =>
           t.dueDate &&
           new Date(t.dueDate) < new Date() &&
-          t.status !== "completed"
+          t.status !== "completed",
       ).length,
     };
   }, [tasks]);
@@ -109,19 +108,7 @@ export default function TasksPage() {
     const overIndex = sortedTasks.findIndex((t) => t.id === over.id);
 
     if (activeIndex !== -1 && overIndex !== -1) {
-      // Reorder tasks logic here
-      // For now, we'll just update the order field
-      const reorderedTasks = [...sortedTasks];
-      const [movedTask] = reorderedTasks.splice(activeIndex, 1);
-      reorderedTasks.splice(overIndex, 0, movedTask);
-
-      // Update order for all affected tasks
-      const updates = reorderedTasks.map((task, index) => ({
-        id: task.id,
-        order: index,
-      }));
-
-      // You could implement bulk order update here
+      // TODO: Implement server-side reorder via bulk update API
     }
   };
 

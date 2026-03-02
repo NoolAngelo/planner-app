@@ -1,14 +1,12 @@
-import React, { useState, useMemo } from "react";
-import {
-  useProjects,
-  useProjectTree,
-  useDeleteProject,
-} from "../hooks/useProjects";
-import { useTasks } from "../hooks/useTasks";
+import clsx from "clsx";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import ProjectForm from "../components/projects/ProjectForm";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import { useDeleteProject, useProjects } from "../hooks/useProjects";
+import { useTasks } from "../hooks/useTasks";
 import type { Project } from "../types";
-import clsx from "clsx";
+import { ProjectIcon } from "../utils/projectIcons";
 
 interface ProjectCardProps {
   project: Project & {
@@ -17,23 +15,17 @@ interface ProjectCardProps {
     progress?: number;
   };
   onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
   level?: number;
 }
 
-function ProjectCard({
-  project,
-  onEdit,
-  onDelete,
-  level = 0,
-}: ProjectCardProps) {
+function ProjectCard({ project, onEdit, level = 0 }: ProjectCardProps) {
   const [showActions, setShowActions] = useState(false);
   const deleteProjectMutation = useDeleteProject();
 
   const handleDelete = () => {
     if (
       confirm(
-        `Are you sure you want to delete "${project.name}"? This will also delete all tasks in this project.`
+        `Are you sure you want to delete "${project.name}"? This will also delete all tasks in this project.`,
       )
     ) {
       deleteProjectMutation.mutate(project.id);
@@ -44,7 +36,7 @@ function ProjectCard({
     <div
       className={clsx(
         "bg-white rounded-lg shadow-sm border hover:shadow-md transition-all duration-200 group",
-        level > 0 && "ml-6 border-l-4"
+        level > 0 && "ml-6 border-l-4",
       )}
       style={{ borderLeftColor: level > 0 ? project.color : undefined }}
       onMouseEnter={() => setShowActions(true)}
@@ -58,7 +50,7 @@ function ProjectCard({
               className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0"
               style={{ backgroundColor: project.color }}
             >
-              {project.icon || "📁"}
+              <ProjectIcon name={project.icon || "folder"} size={20} />
             </div>
 
             {/* Project Info */}
@@ -83,15 +75,15 @@ function ProjectCard({
               {/* Project Stats */}
               <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
                 <span className="flex items-center">
-                  📋 {project.taskCount || 0} tasks
+                  {project.taskCount || 0} tasks
                 </span>
                 {(project.completedTasks || 0) > 0 && (
                   <span className="flex items-center">
-                    ✅ {project.completedTasks} completed
+                    {project.completedTasks} completed
                   </span>
                 )}
-                <span className="flex items-center">
-                  👁️ {project.defaultView}
+                <span className="flex items-center gap-1">
+                  <Eye size={14} /> {project.defaultView}
                 </span>
               </div>
 
@@ -124,14 +116,14 @@ function ProjectCard({
                 className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-md"
                 title="Edit project"
               >
-                ✏️
+                <Pencil size={16} />
               </button>
               <button
                 onClick={handleDelete}
                 className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-md"
                 title="Delete project"
               >
-                🗑️
+                <Trash2 size={16} />
               </button>
             </div>
           )}
@@ -156,10 +148,10 @@ export default function ProjectsPage() {
   const projectsWithStats = useMemo(() => {
     return projects.map((project) => {
       const projectTasks = tasks.filter(
-        (task) => task.projectId === project.id
+        (task) => task.projectId === project.id,
       );
       const completedTasks = projectTasks.filter(
-        (task) => task.status === "completed"
+        (task) => task.status === "completed",
       ).length;
       const progress =
         projectTasks.length > 0
@@ -182,7 +174,7 @@ export default function ProjectsPage() {
     return projectsWithStats.filter(
       (project) =>
         project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        project.description?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [projectsWithStats, searchQuery]);
 
@@ -203,7 +195,7 @@ export default function ProjectsPage() {
         total > 0
           ? Math.round(
               projectsWithStats.reduce((acc, p) => acc + (p.progress || 0), 0) /
-                total
+                total,
             )
           : 0,
     };
@@ -331,7 +323,6 @@ export default function ProjectsPage() {
                 key={project.id}
                 project={project}
                 onEdit={handleEditProject}
-                onDelete={() => {}}
               />
             ))}
           </div>

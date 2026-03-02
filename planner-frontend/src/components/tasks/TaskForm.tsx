@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type { Task, Project, Tag } from "../../types";
 import { useProjects } from "../../hooks/useProjects";
 import { useCreateTask, useUpdateTask } from "../../hooks/useTasks";
-import { format } from "date-fns";
+import type { Project, Task } from "../../types";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 interface TaskFormProps {
   task?: Task;
   onClose: () => void;
-  onSubmit?: (task: Task) => void;
 }
 
 interface TaskFormData {
@@ -29,7 +27,7 @@ interface TaskFormData {
   progress: number;
 }
 
-export default function TaskForm({ task, onClose, onSubmit }: TaskFormProps) {
+export default function TaskForm({ task, onClose }: TaskFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: projects = [] } = useProjects();
   const createTaskMutation = useCreateTask();
@@ -39,7 +37,6 @@ export default function TaskForm({ task, onClose, onSubmit }: TaskFormProps) {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<TaskFormData>({
     defaultValues: {
@@ -68,11 +65,11 @@ export default function TaskForm({ task, onClose, onSubmit }: TaskFormProps) {
     try {
       const taskData = {
         ...data,
-        duration: data.allDay ? null : data.duration,
-        dueTime: data.allDay ? null : data.dueTime,
-        startTime: data.allDay ? null : data.startTime,
-        projectId: data.projectId || null,
-        parentTaskId: data.parentTaskId || null,
+        duration: data.allDay ? undefined : data.duration,
+        dueTime: data.allDay ? undefined : data.dueTime || undefined,
+        startTime: data.allDay ? undefined : data.startTime || undefined,
+        projectId: data.projectId || undefined,
+        parentTaskId: data.parentTaskId || undefined,
       };
 
       if (task) {

@@ -129,13 +129,3 @@ export interface Attachment {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface Comment {
-  id: string;
-  content: string;
-  userId: string;
-  taskId: string;
-  createdAt: string;
-  updatedAt: string;
-  user?: User;
-}

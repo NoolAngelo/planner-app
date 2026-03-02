@@ -1,7 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { projectsApi } from "../services/api";
 import type { Project } from "../types";
-import toast from "react-hot-toast";
 
 export function useProjects(includeArchived = false) {
   return useQuery({
@@ -49,7 +49,7 @@ export function useUpdateProject() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Project> }) =>
       projectsApi.updateProject(id, data),
-    onSuccess: (response, variables) => {
+    onSuccess: (_response, variables) => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project", variables.id] });
       toast.success("Project updated successfully!");

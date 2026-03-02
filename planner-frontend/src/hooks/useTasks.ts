@@ -1,7 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { tasksApi } from "../services/api";
 import type { Task } from "../types";
-import toast from "react-hot-toast";
 
 export function useTasks(params?: {
   projectId?: string;
@@ -49,7 +49,7 @@ export function useUpdateTask() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Task> }) =>
       tasksApi.updateTask(id, data),
-    onSuccess: (response, variables) => {
+    onSuccess: (_response, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["task", variables.id] });
       toast.success("Task updated successfully!");

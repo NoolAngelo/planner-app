@@ -1,17 +1,16 @@
-import React, { useMemo } from "react";
-import { useTasks } from "../hooks/useTasks";
-import { useProjects } from "../hooks/useProjects";
+import { format, isPast, isToday } from "date-fns";
 import {
-  format,
-  isToday,
-  isTomorrow,
-  isPast,
-  startOfWeek,
-  endOfWeek,
-} from "date-fns";
-import type { Task } from "../types";
+  AlertTriangle,
+  CheckCircle2,
+  ClipboardList,
+  Star,
+  TrendingUp,
+} from "lucide-react";
+import { useMemo } from "react";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
-import TaskItem from "../components/tasks/TaskItem";
+import { useProjects } from "../hooks/useProjects";
+import { useTasks } from "../hooks/useTasks";
+import type { Task } from "../types";
 
 export default function DashboardPage() {
   const { data: tasksData, isLoading: tasksLoading } = useTasks();
@@ -25,47 +24,28 @@ export default function DashboardPage() {
     const inProgress = tasks.filter((t) => t.status === "in_progress").length;
     const overdue = tasks.filter(
       (t) =>
-        t.dueDate && isPast(new Date(t.dueDate)) && t.status !== "completed"
+        t.dueDate && isPast(new Date(t.dueDate)) && t.status !== "completed",
     ).length;
 
     // Today's tasks
     const today = tasks.filter(
-      (t) => t.dueDate && isToday(new Date(t.dueDate))
+      (t) => t.dueDate && isToday(new Date(t.dueDate)),
     );
-
-    // This week's tasks
-    const weekStart = startOfWeek(new Date());
-    const weekEnd = endOfWeek(new Date());
-    const thisWeek = tasks.filter((t) => {
-      if (!t.dueDate) return false;
-      const dueDate = new Date(t.dueDate);
-      return dueDate >= weekStart && dueDate <= weekEnd;
-    });
 
     // Important tasks
     const important = tasks.filter(
-      (t) => t.isImportant && t.status !== "completed"
+      (t) => t.isImportant && t.status !== "completed",
     );
-
-    // Recent activity
-    const recentlyCompleted = tasks
-      .filter((t) => t.status === "completed" && t.completedAt)
-      .sort(
-        (a, b) =>
-          new Date(b.completedAt!).getTime() -
-          new Date(a.completedAt!).getTime()
-      )
-      .slice(0, 5);
 
     // Priority breakdown
     const priorityBreakdown = {
       highest: tasks.filter(
-        (t) => t.priority === "1" && t.status !== "completed"
+        (t) => t.priority === "1" && t.status !== "completed",
       ).length,
       high: tasks.filter((t) => t.priority === "2" && t.status !== "completed")
         .length,
       medium: tasks.filter(
-        (t) => t.priority === "3" && t.status !== "completed"
+        (t) => t.priority === "3" && t.status !== "completed",
       ).length,
       low: tasks.filter((t) => t.priority === "4" && t.status !== "completed")
         .length,
@@ -84,7 +64,7 @@ export default function DashboardPage() {
             ? Math.round(
                 (projectTasks.filter((t) => t.status === "completed").length /
                   projectTasks.length) *
-                  100
+                  100,
               )
             : 0,
       };
@@ -96,9 +76,7 @@ export default function DashboardPage() {
       inProgress,
       overdue,
       today,
-      thisWeek,
       important,
-      recentlyCompleted,
       priorityBreakdown,
       projectStats,
       completionRate: total > 0 ? Math.round((completed / total) * 100) : 0,
@@ -137,7 +115,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              📋
+              <ClipboardList size={24} className="text-blue-600" />
             </div>
           </div>
         </div>
@@ -149,10 +127,10 @@ export default function DashboardPage() {
               <p className="text-3xl font-bold text-green-600 mt-2">
                 {stats.completed}
               </p>
-              <p className="text-sm text-gray-500 mt-1">Great job! 🎉</p>
+              <p className="text-sm text-gray-500 mt-1">Well done</p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              ✅
+              <CheckCircle2 size={24} className="text-green-600" />
             </div>
           </div>
         </div>
@@ -164,10 +142,10 @@ export default function DashboardPage() {
               <p className="text-3xl font-bold text-yellow-600 mt-2">
                 {stats.inProgress}
               </p>
-              <p className="text-sm text-gray-500 mt-1">Keep going! 💪</p>
+              <p className="text-sm text-gray-500 mt-1">In progress</p>
             </div>
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              🚀
+              <TrendingUp size={24} className="text-yellow-600" />
             </div>
           </div>
         </div>
@@ -180,11 +158,11 @@ export default function DashboardPage() {
                 {stats.overdue}
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.overdue > 0 ? "Needs attention ⚠️" : "All caught up! ✨"}
+                {stats.overdue > 0 ? "Needs attention" : "All caught up"}
               </p>
             </div>
             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              ⏰
+              <AlertTriangle size={24} className="text-red-600" />
             </div>
           </div>
         </div>
@@ -247,7 +225,7 @@ export default function DashboardPage() {
           <div className="space-y-3 max-h-80 overflow-y-auto">
             {stats.today.length === 0 ? (
               <p className="text-gray-500 text-center py-4">
-                No tasks due today. Great job! 🎉
+                No tasks due today. All clear.
               </p>
             ) : (
               stats.today.slice(0, 5).map((task: Task) => (
@@ -286,8 +264,12 @@ export default function DashboardPage() {
                   key={task.id}
                   className="border-l-4 border-yellow-500 pl-4 py-2"
                 >
-                  <h4 className="font-medium text-gray-900 flex items-center">
-                    ⭐ {task.title}
+                  <h4 className="font-medium text-gray-900 flex items-center gap-1">
+                    <Star
+                      size={14}
+                      className="text-yellow-500 fill-yellow-500"
+                    />{" "}
+                    {task.title}
                   </h4>
                   <p className="text-sm text-gray-500">
                     {task.dueDate

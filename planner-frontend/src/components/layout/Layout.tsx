@@ -1,15 +1,20 @@
-import React from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import {
+  CheckSquare,
+  FolderOpen,
+  LayoutDashboard,
+  type LucideIcon,
+} from "lucide-react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: "📊" },
-    { name: "Tasks", href: "/tasks", icon: "✅" },
-    { name: "Projects", href: "/projects", icon: "📁" },
+  const navigation: { name: string; href: string; icon: LucideIcon }[] = [
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Tasks", href: "/tasks", icon: CheckSquare },
+    { name: "Projects", href: "/projects", icon: FolderOpen },
   ];
 
   const isActive = (href: string) => location.pathname === href;
@@ -55,7 +60,7 @@ export default function Layout() {
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     }`}
                   >
-                    <span className="mr-3">{item.icon}</span>
+                    <item.icon size={18} className="mr-3" />
                     {item.name}
                   </Link>
                 </li>

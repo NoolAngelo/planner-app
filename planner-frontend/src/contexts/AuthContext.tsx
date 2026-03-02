@@ -1,7 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import type { ReactNode } from "react";
-import type { User } from "../types";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { authApi } from "../services/api";
+import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
@@ -11,7 +16,7 @@ interface AuthContextType {
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ) => Promise<void>;
   logout: () => void;
   loading: boolean;
@@ -27,7 +32,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
+    localStorage.getItem("token"),
   );
   const [loading, setLoading] = useState(true);
 
@@ -53,39 +58,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await authApi.login({ email, password });
-      const { user: userData, token: userToken } = response.data;
+    const response = await authApi.login({ email, password });
+    const { user: userData, token: userToken } = response.data;
 
-      setUser(userData);
-      setToken(userToken);
-      localStorage.setItem("token", userToken);
-    } catch (error) {
-      throw error;
-    }
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem("token", userToken);
   };
 
   const register = async (
     email: string,
     password: string,
     firstName: string,
-    lastName: string
+    lastName: string,
   ) => {
-    try {
-      const response = await authApi.register({
-        email,
-        password,
-        firstName,
-        lastName,
-      });
-      const { user: userData, token: userToken } = response.data;
+    const response = await authApi.register({
+      email,
+      password,
+      firstName,
+      lastName,
+    });
+    const { user: userData, token: userToken } = response.data;
 
-      setUser(userData);
-      setToken(userToken);
-      localStorage.setItem("token", userToken);
-    } catch (error) {
-      throw error;
-    }
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem("token", userToken);
   };
 
   const logout = () => {

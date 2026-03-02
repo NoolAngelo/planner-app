@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import type { Project } from "../../types";
 import {
   useCreateProject,
-  useUpdateProject,
   useProjects,
+  useUpdateProject,
 } from "../../hooks/useProjects";
+import type { Project } from "../../types";
+import { PROJECT_ICONS, ProjectIcon } from "../../utils/projectIcons";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 interface ProjectFormProps {
   project?: Project;
   onClose: () => void;
-  onSubmit?: (project: Project) => void;
 }
 
 interface ProjectFormData {
@@ -37,35 +37,14 @@ const colorOptions = [
   "#06b6d4",
   "#0ea5e9",
   "#3b82f6",
-  "#6366f1",
-  "#8b5cf6",
   "#a855f7",
+  "#d946ef",
+  "#64748b",
 ];
 
-const iconOptions = [
-  "📁",
-  "🎯",
-  "💼",
-  "🚀",
-  "⭐",
-  "🔥",
-  "💡",
-  "🎨",
-  "📊",
-  "🛠️",
-  "🏠",
-  "🌟",
-  "🎭",
-  "🎵",
-  "📚",
-  "💰",
-];
+const iconOptions = PROJECT_ICONS.map((opt) => opt.name);
 
-export default function ProjectForm({
-  project,
-  onClose,
-  onSubmit,
-}: ProjectFormProps) {
+export default function ProjectForm({ project, onClose }: ProjectFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: projects = [] } = useProjects();
   const createProjectMutation = useCreateProject();
@@ -82,7 +61,7 @@ export default function ProjectForm({
       name: project?.name || "",
       description: project?.description || "",
       color: project?.color || "#6366f1",
-      icon: project?.icon || "📁",
+      icon: project?.icon || "folder",
       parentId: project?.parentId || "",
       defaultView: project?.defaultView || "list",
     },
@@ -235,13 +214,13 @@ export default function ProjectForm({
                   key={icon}
                   type="button"
                   onClick={() => setValue("icon", icon)}
-                  className={`w-8 h-8 rounded-md border-2 flex items-center justify-center text-lg ${
+                  className={`w-8 h-8 rounded-md border-2 flex items-center justify-center ${
                     selectedIcon === icon
                       ? "border-primary-500 bg-primary-50 scale-110"
                       : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                   } transition-all duration-200`}
                 >
-                  {icon}
+                  <ProjectIcon name={icon} size={16} />
                 </button>
               ))}
             </div>
@@ -255,7 +234,11 @@ export default function ProjectForm({
                 className="w-8 h-8 rounded-md flex items-center justify-center text-white text-lg"
                 style={{ backgroundColor: selectedColor }}
               >
-                {selectedIcon}
+                <ProjectIcon
+                  name={selectedIcon}
+                  size={18}
+                  className="text-white"
+                />
               </div>
               <div>
                 <h4 className="font-medium text-gray-900">

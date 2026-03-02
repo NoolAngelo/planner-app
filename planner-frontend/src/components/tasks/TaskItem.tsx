@@ -1,10 +1,11 @@
-import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { Task } from "../../types";
-import { useCompleteTask, useDeleteTask } from "../../hooks/useTasks";
-import { format, isToday, isTomorrow, isPast } from "date-fns";
 import clsx from "clsx";
+import { format, isPast, isToday, isTomorrow } from "date-fns";
+import { Calendar, Clock, ListTodo, Pencil, Star, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { useCompleteTask, useDeleteTask } from "../../hooks/useTasks";
+import type { Task } from "../../types";
 
 interface TaskItemProps {
   task: Task;
@@ -101,7 +102,7 @@ export default function TaskItem({
         getPriorityColor(task.priority),
         task.status === "completed" && "opacity-75",
         (isDragging || isSortableDragging) && "shadow-lg z-10",
-        task.isImportant && "ring-2 ring-yellow-400"
+        task.isImportant && "ring-2 ring-yellow-400",
       )}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -125,7 +126,7 @@ export default function TaskItem({
                 "flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors",
                 task.status === "completed"
                   ? "bg-green-500 border-green-500 text-white"
-                  : "border-gray-300 hover:border-green-500"
+                  : "border-gray-300 hover:border-green-500",
               )}
             >
               {task.status === "completed" && "✓"}
@@ -139,13 +140,13 @@ export default function TaskItem({
                     "text-sm font-medium truncate",
                     task.status === "completed"
                       ? "line-through text-gray-500"
-                      : "text-gray-900"
+                      : "text-gray-900",
                   )}
                 >
                   {task.title}
                 </h3>
                 {task.isImportant && (
-                  <span className="text-yellow-500 text-xs">⭐</span>
+                  <Star size={14} className="text-yellow-500 fill-yellow-500" />
                 )}
               </div>
 
@@ -172,18 +173,22 @@ export default function TaskItem({
                 {task.dueDate && (
                   <span
                     className={clsx(
-                      "font-medium",
+                      "font-medium flex items-center gap-1",
                       isPast(new Date(task.dueDate)) &&
                         task.status !== "completed"
                         ? "text-red-600"
-                        : "text-gray-600"
+                        : "text-gray-600",
                     )}
                   >
-                    📅 {formatDueDate(task.dueDate)}
+                    <Calendar size={12} /> {formatDueDate(task.dueDate)}
                   </span>
                 )}
 
-                {task.dueTime && !task.allDay && <span>🕒 {task.dueTime}</span>}
+                {task.dueTime && !task.allDay && (
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} /> {task.dueTime}
+                  </span>
+                )}
 
                 <span className={getStatusColor(task.status)}>
                   {task.status.replace("_", " ")}
@@ -194,8 +199,8 @@ export default function TaskItem({
                 )}
 
                 {task.subtasks && task.subtasks.length > 0 && (
-                  <span>
-                    📝{" "}
+                  <span className="flex items-center gap-1">
+                    <ListTodo size={12} />{" "}
                     {
                       task.subtasks.filter((st) => st.status === "completed")
                         .length
@@ -245,14 +250,14 @@ export default function TaskItem({
                 className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
                 title="Edit task"
               >
-                ✏️
+                <Pencil size={14} />
               </button>
               <button
                 onClick={handleDelete}
                 className="p-1 text-gray-400 hover:text-red-600 transition-colors"
                 title="Delete task"
               >
-                🗑️
+                <Trash2 size={14} />
               </button>
             </div>
           )}
