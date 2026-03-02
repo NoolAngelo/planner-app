@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 3001;
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
+  }),
 );
 
 // Rate limiting
@@ -45,7 +45,7 @@ app.use(
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
     optionsSuccessStatus: 200,
-  })
+  }),
 );
 
 // Body parsing middleware
@@ -103,22 +103,22 @@ const startServer = async () => {
   try {
     // Test database connection
     await sequelize.authenticate();
-    console.log("✅ Database connected successfully");
+    console.log("[OK] Database connected successfully");
 
     // Sync database models (only in development)
     if (process.env.NODE_ENV === "development") {
       await sequelize.sync({ alter: true });
-      console.log("✅ Database models synchronized");
+      console.log("[OK] Database models synchronized");
     }
 
     // Start server
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/health`);
-      console.log(`🧪 Test API: http://localhost:${PORT}/api/test`);
+      console.log(`[SERVER] Running on port ${PORT}`);
+      console.log(`[SERVER] Health check: http://localhost:${PORT}/health`);
+      console.log(`[SERVER] Test API: http://localhost:${PORT}/api/test`);
     });
   } catch (error) {
-    console.error("❌ Unable to connect to the database:", error.message);
+    console.error("[ERROR] Unable to connect to the database:", error.message);
     process.exit(1);
   }
 };
