@@ -1,156 +1,73 @@
-# Planner App
+# React + TypeScript + Vite
 
-A modern, full-stack task and project management application built with Node.js and React. Organize your projects, manage tasks with subtasks, track progress, and boost your productivity.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node.js](https://img.shields.io/badge/node.js-v16+-green.svg)
-![React](https://img.shields.io/badge/react-v19-blue.svg)
-![TypeScript](https://img.shields.io/badge/typescript-v5+-blue.svg)
+Currently, two official plugins are available:
 
-## Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-**Authentication and Security**
+## React Compiler
 
-- JWT-based authentication with secure cookies
-- Password hashing with bcrypt
-- Rate limiting and CORS protection
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-**Task Management**
+## Expanding the ESLint configuration
 
-- Create, edit, and organize tasks with subtasks
-- Set priorities, due dates, and time tracking
-- Mark tasks as complete with progress tracking
-- Bulk operations for efficiency
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-**Project Organization**
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-- Hierarchical project structure
-- Project statistics and progress visualization
-- Archive projects to keep workspace clean
-- Custom project icons and colors
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-**Tagging System**
-
-- Organize tasks with colored tags
-- Filter and search by tags
-- Tag management and customization
-
-**File Attachments**
-
-- Upload files to tasks
-- File metadata and organization
-- Secure file storage
-
-**Search and Filtering**
-
-- Advanced search across tasks and projects
-- Multiple filter options (status, tags, dates)
-- Real-time search results
-
-**Analytics and Insights**
-
-- User productivity statistics
-- Project progress tracking
-- Task completion analytics
-
-## Quick Start
-
-### Prerequisites
-
-- **Node.js** (v16 or higher)
-- **PostgreSQL** (v12 or higher)
-- **npm** or **yarn**
-
-### Installation
-
-1. Clone the repository
-2. Install backend dependencies: `npm install`
-3. Install frontend dependencies: `cd planner-frontend && npm install`
-4. Create database: `createdb planner_app_dev`
-5. Copy `.env.example` to `.env` and configure credentials
-6. Start backend: `npm run dev`
-7. Start frontend: `cd planner-frontend && npm run dev`
-8. Open http://localhost:5173
-
-## Tech Stack
-
-### Backend
-
-- **Node.js** with Express.js
-- **PostgreSQL** with Sequelize ORM
-- **JWT** authentication with bcrypt
-- **Rate limiting** and security middleware
-
-### Frontend
-
-- **React 19** with TypeScript
-- **Vite** build tool
-- **Tailwind CSS** styling
-- **TanStack Query** for data fetching
-- **React Router v7** for navigation
-- **Axios** for HTTP
-
-## API Endpoints
-
-### Authentication
-
-```
-POST /api/auth/register
-POST /api/auth/login
-POST /api/auth/logout
-GET /api/auth/me
-PUT /api/auth/me
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-### Tasks
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-GET /api/tasks
-POST /api/tasks
-GET /api/tasks/:id
-PUT /api/tasks/:id
-DELETE /api/tasks/:id
-PATCH /api/tasks/:id/complete
-PATCH /api/tasks/bulk
-```
-
-### Projects
-
-```
-GET /api/projects
-POST /api/projects
-GET /api/projects/:id
-PUT /api/projects/:id
-DELETE /api/projects/:id
-GET /api/projects/tree
-```
-
-### Tags and Attachments
-
-```
-GET /api/tags
-POST /api/tags
-PUT /api/tags/:id
-DELETE /api/tags/:id
-POST /api/attachments
-DELETE /api/attachments/:id
-```
-
-## Troubleshooting
-
-**Database connection errors:** Ensure PostgreSQL is running and credentials in `.env` are correct.
-
-**Port conflicts:** Check with `lsof -i :3001` and `lsof -i :5173`.
-
-## License
-
-MIT License.
-
-## Support
-
-- **Bug Reports:** [Open an issue](https://github.com/noolangelo/planner-app/issues)
-- **Feature Requests:** [Open an issue](https://github.com/noolangelo/planner-app/issues)
-
----
-
-Built for productivity.
