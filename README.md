@@ -1,8 +1,18 @@
-# Cafe Planner
+# ☕️ Cafe Planner
 
 A minimalist, ultra-comfort task planner designed with a warm coffee-inspired aesthetic. Built for productivity without the visual clutter.
 
-## Features
+## 📸 Previews
+
+<div align="center">
+  <img src="plan 1.png" alt="Cafe Planner Empty State" width="700" />
+  <br/><br/>
+  <img src="plan 2.png" alt="Cafe Planner Adding Tasks" width="700" />
+  <br/><br/>
+  <img src="plan 3.png" alt="Cafe Planner Editing" width="700" />
+</div>
+
+## ✨ Features
 
 - **Cozy UI:** Earthy, warm color palette (Latte, Matcha, Caramel) designed with Tailwind CSS.
 - **Smart Sorting:** Automatically prioritizes incomplete and upcoming tasks. Overdue tasks are highlighted.
@@ -10,13 +20,13 @@ A minimalist, ultra-comfort task planner designed with a warm coffee-inspired ae
 - **Quick Editing:** Double-click any task to seamlessly edit notes, categories, and due dates inline. Multi-line note support included.
 - **Categorization:** Tag tasks to keep personal, work, and errands separated.
 
-## Stack
+## 🛠️ Tech Stack
 
 - **Frontend:** React (TypeScript) + Vite
 - **Styling:** Tailwind CSS
 - **Data:** Browser `localStorage`
 
-## How to Run Locally
+## 🚀 How to Run Locally
 
 1. Clone the repository
 2. Install dependencies:
@@ -30,5 +40,4 @@ A minimalist, ultra-comfort task planner designed with a warm coffee-inspired ae
 4. Open `http://localhost:5173` in your browser.
 
 ---
-
-_Brew great ideas today._
+*Brew great ideas today.*
