@@ -4,12 +4,9 @@ A minimalist, ultra-comfort task planner designed with a warm coffee-inspired ae
 
 ## Previews
 
-  <img src="plan 1.png" alt="Cafe Planner Empty State" width="700" />
-  <br/><br/>
-  <img src="plan 2.png" alt="Cafe Planner Adding Tasks" width="700" />
-  <br/><br/>
-  <img src="plan 3.png" alt="Cafe Planner Editing" width="700" />
-
+<p>< img src="(https://raw.githubusercontent.com/ChrisTitusTech/ChrisTitusTech/main/ctt-600px-github.png](https://github.com/NoolAngelo/planner-app/blob/main/plan1.png)" /></p>
+<p>< img src="(https://raw.githubusercontent.com/ChrisTitusTech/ChrisTitusTech/main/ctt-600px-github.png](https://github.com/NoolAngelo/planner-app/blob/main/plan2.png)" /></p>
+<p>< img src="(https://raw.githubusercontent.com/ChrisTitusTech/ChrisTitusTech/main/ctt-600px-github.png](https://github.com/NoolAngelo/planner-app/blob/main/plan3.png)" /></p>
 ## Tech Stack
 
 - **Frontend:** React (TypeScript) + Vite
