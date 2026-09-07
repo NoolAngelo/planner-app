@@ -4,13 +4,11 @@ A minimalist, ultra-comfort task planner designed with a warm coffee-inspired ae
 
 ## Previews
 
-<div align="center">
   <img src="plan 1.png" alt="Cafe Planner Empty State" width="700" />
   <br/><br/>
   <img src="plan 2.png" alt="Cafe Planner Adding Tasks" width="700" />
   <br/><br/>
   <img src="plan 3.png" alt="Cafe Planner Editing" width="700" />
-</div>
 
 ## Tech Stack
 
