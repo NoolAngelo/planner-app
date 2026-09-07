@@ -7,6 +7,7 @@ A minimalist, ultra-comfort task planner designed with a warm coffee-inspired ae
 <p><img src="./plan1.png" alt="Planner preview 1" /></p>
 <p><img src="./plan2.png" alt="Planner preview 2" /></p>
 <p><img src="./plan3.png" alt="Planner preview 3" /></p>
+
 ## Tech Stack
 
 - **Frontend:** React (TypeScript) + Vite
