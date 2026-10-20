@@ -2,6 +2,8 @@ import {
   closestCenter,
   DndContext,
   type DragEndEvent,
+  type DraggableAttributes,
+  type DraggableSyntheticListeners,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -48,7 +50,10 @@ function SortableTaskWrapper({
   children,
 }: {
   id: string;
-  children: (props: any) => React.ReactNode;
+  children: (props: {
+    attributes: DraggableAttributes;
+    listeners: DraggableSyntheticListeners;
+  }) => React.ReactNode;
 }) {
   const {
     attributes,
@@ -87,7 +92,7 @@ function App() {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
+      } catch {
         console.error("Failed to parse tasks from local storage");
       }
     }
@@ -340,56 +345,61 @@ function App() {
 
         {/* FILTERS & SEARCH */}
         {tasks.length > 0 && (
-          <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#FBF9F6] dark:bg-[#2C2420] p-2 transition-colors">
-            <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
-              <button
-                onClick={() => setFilterCategory("All")}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase transition-colors shrink-0 shadow-sm border ${
-                  filterCategory === "All"
-                    ? "bg-[#4A3B32] dark:bg-[#8C7A6D] text-[#FBF9F6] border-[#4A3B32] dark:border-[#8C7A6D]"
-                    : "bg-[#F4F1EA] dark:bg-[#1E1815] text-[#8C7A6D] dark:text-[#BAA89B] hover:bg-[#E8E3D9] dark:hover:bg-[#3A302A] border-transparent"
-                }`}
-              >
-                All
-              </button>
-              {CATEGORIES.map((c) => (
+          <div className="mb-8 flex flex-col gap-3 bg-[#FBF9F6] dark:bg-[#2C2420] p-2 transition-colors">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#8C7A6D] dark:text-[#BAA89B]">
+              Showing {filteredTasks.length} of {tasks.length} tasks
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+              <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 hide-scrollbar">
                 <button
-                  key={c}
-                  onClick={() => setFilterCategory(c)}
+                  onClick={() => setFilterCategory("All")}
                   className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase transition-colors shrink-0 shadow-sm border ${
-                    filterCategory === c
+                    filterCategory === "All"
                       ? "bg-[#4A3B32] dark:bg-[#8C7A6D] text-[#FBF9F6] border-[#4A3B32] dark:border-[#8C7A6D]"
                       : "bg-[#F4F1EA] dark:bg-[#1E1815] text-[#8C7A6D] dark:text-[#BAA89B] hover:bg-[#E8E3D9] dark:hover:bg-[#3A302A] border-transparent"
                   }`}
                 >
-                  {c}
+                  All
                 </button>
-              ))}
-            </div>
-
-            <div className="relative w-full sm:w-64 shrink-0">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-4 w-4 text-[#8C7A6D] dark:text-[#BAA89B]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                {CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setFilterCategory(c)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase transition-colors shrink-0 shadow-sm border ${
+                      filterCategory === c
+                        ? "bg-[#4A3B32] dark:bg-[#8C7A6D] text-[#FBF9F6] border-[#4A3B32] dark:border-[#8C7A6D]"
+                        : "bg-[#F4F1EA] dark:bg-[#1E1815] text-[#8C7A6D] dark:text-[#BAA89B] hover:bg-[#E8E3D9] dark:hover:bg-[#3A302A] border-transparent"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
               </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 bg-[#F4F1EA] dark:bg-[#1E1815] border border-[#E8E3D9] dark:border-[#3A302A] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#BAA89B] dark:focus:ring-[#8C7A6D] text-[#4A3B32] dark:text-[#E8E3D9] placeholder-[#B5ACA3] dark:placeholder-[#6B5A4E] shadow-sm transition-all"
-              />
+
+              <div className="relative w-full sm:w-64 shrink-0">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg
+                    className="h-4 w-4 text-[#8C7A6D] dark:text-[#BAA89B]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search..."
+                  className="w-full pl-10 pr-4 py-2 bg-[#F4F1EA] dark:bg-[#1E1815] border border-[#E8E3D9] dark:border-[#3A302A] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#BAA89B] dark:focus:ring-[#8C7A6D] text-[#4A3B32] dark:text-[#E8E3D9] placeholder-[#B5ACA3] dark:placeholder-[#6B5A4E] shadow-sm transition-all"
+                />
+              </div>
             </div>
           </div>
         )}
@@ -409,6 +419,26 @@ function App() {
                 Pour a coffee and add a task to begin.
               </p>
             </motion.div>
+          ) : filteredTasks.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-[#E8E3D9] dark:border-[#3A302A] bg-[#F4F1EA]/30 dark:bg-[#1E1815]/30"
+            >
+              <p className="text-[#8C7A6D] dark:text-[#BAA89B] text-lg font-serif italic">
+                No tasks match these filters.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setFilterCategory("All");
+                }}
+                className="mt-3 text-sm font-semibold text-[#715C53] dark:text-[#BAA89B] underline underline-offset-4"
+              >
+                Clear filters
+              </button>
+            </motion.div>
           ) : (
             <DndContext
               sensors={sensors}
@@ -422,7 +452,7 @@ function App() {
                 <AnimatePresence mode="popLayout">
                   {filteredTasks.map((task) => (
                     <SortableTaskWrapper key={task.id} id={task.id}>
-                      {({ attributes, listeners }: any) => (
+                      {({ attributes, listeners }) => (
                         <div
                           className={`flex flex-col sm:flex-row sm:items-start justify-between p-5 rounded-2xl border transition-colors duration-300 group ${
                             task.completed && editingId !== task.id
@@ -634,6 +664,7 @@ function App() {
                             <div className="flex items-center gap-2 mt-4 sm:mt-0 sm:opacity-0 group-hover:opacity-100 transition-opacity justify-end ml-10 sm:ml-0 shrink-0">
                               <button
                                 onClick={() => startEditing(task)}
+                                aria-label={`Edit ${task.text}`}
                                 className="p-2 text-[#8C7A6D] hover:text-[#4A3B32] dark:hover:text-[#FBF9F6] hover:bg-[#ECEADF] dark:hover:bg-[#3A302A] rounded-lg transition-colors"
                                 title="Edit task"
                               >
